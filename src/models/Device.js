@@ -1,29 +1,33 @@
 export class Device {
-  constructor(deviceId, deviceType, enabled, firmwareVersion, wifiSsid) {
+  constructor(deviceId, locationName, isActive, lastSeenAt, updatedAt, wifiSsid, wifiPassword) {
     this.deviceId = deviceId;
-    this.deviceType = deviceType;
-    this.enabled = enabled;
-    this.firmwareVersion = firmwareVersion;
+    this.locationName = locationName;
+    this.isActive = isActive;
+    this.lastSeenAt = lastSeenAt;
+    this.updatedAt = updatedAt;
     this.wifiSsid = wifiSsid;
+    this.wifiPassword = wifiPassword;
   }
 
   static fromJson(json) {
     return new Device(
       json.device_id,
-      json.device_type,
-      json.enabled ?? true,
-      json.firmware_version ?? 'unknown',
-      json.wifi_ssid
+      json.location_name,
+      json.is_active ?? true,
+      json.last_seen_at ? new Date(json.last_seen_at) : null,
+      json.updated_at ? new Date(json.updated_at) : null,
+      json.wifi_ssid,
+      json.wifi_password
     );
   }
 
   toJson() {
     return {
       device_id: this.deviceId,
-      device_type: this.deviceType,
-      enabled: this.enabled,
-      firmware_version: this.firmwareVersion,
+      location_name: this.locationName,
+      is_active: this.isActive,
       wifi_ssid: this.wifiSsid,
+      wifi_password: this.wifiPassword,
     };
   }
 }

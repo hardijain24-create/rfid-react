@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import AdminHomeScreen from '../screens/AdminHomeScreen';
 import TeacherHomeScreen from '../screens/TeacherHomeScreen';
@@ -8,8 +8,11 @@ import RfidScreen from '../screens/RfidScreen';
 import AdminStudentsScreen from '../screens/AdminStudentsScreen';
 import AddStudentScreen from '../screens/AddStudentScreen';
 import DeviceSettingsScreen from '../screens/DeviceSettingsScreen';
+import AddTeacherScreen from '../screens/AddTeacherScreen';
+import ManageTeachersScreen from '../screens/ManageTeachersScreen';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
+
 
 const AppNavigator = () => {
   return (
@@ -49,6 +52,16 @@ const AppNavigator = () => {
           name="DeviceSettings" 
           component={DeviceSettingsScreen} 
           options={{ title: 'Device Settings' }}
+        />
+        <Stack.Screen 
+          name="AddTeacher" 
+          component={AddTeacherScreen} 
+          options={{ title: 'Add Teacher' }}
+        />
+        <Stack.Screen 
+          name="ManageTeachers" 
+          component={ManageTeachersScreen} 
+          options={{ title: 'Manage Teachers' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -10,39 +10,37 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import StudentService from '../services/StudentService';
+import TeacherService from '../services/TeacherService';
 
-const AddStudentScreen = ({ navigation }) => {
-  const [studentId, setStudentId] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [grade, setGrade] = useState('');
-  const [section, setSection] = useState('');
+const AddTeacherScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const saveStudent = async () => {
-    if (!studentId.trim() || !fullName.trim() || !grade.trim()) {
-      Alert.alert('Error', 'Please enter required fields (Student ID, Name, Grade)');
+  const saveTeacher = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please enter Name, Email, and Password');
       return;
     }
 
     setLoading(true);
     try {
-      const studentData = {
-        student_id: studentId.trim(),
-        full_name: fullName.trim(),
-        grade: grade.trim(),
-        section: section.trim() || null,
+      const teacherData = {
+        name: name.trim(),
+        email: email.trim(),
+        password: password.trim(),
       };
-      const result = await StudentService.addStudent(studentData);
+      const result = await TeacherService.addTeacher(teacherData);
       
       if (result.success) {
-        Alert.alert('Success', 'Student added successfully');
+        Alert.alert('Success', 'Teacher added successfully');
         navigation.goBack();
       } else {
         Alert.alert('Error', result.error);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to add student');
+      Alert.alert('Error', 'Failed to add teacher');
     } finally {
       setLoading(false);
     }
@@ -54,50 +52,45 @@ const AddStudentScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Register Student</Text>
-        
-        <TextInput
-          style={styles.input}
-          placeholder="Student ID *"
-          placeholderTextColor="#999"
-          value={studentId}
-          onChangeText={setStudentId}
-          autoFocus
-        />
+        <Text style={styles.title}>Register Teacher</Text>
 
         <TextInput
           style={styles.input}
           placeholder="Full Name *"
           placeholderTextColor="#999"
-          value={fullName}
-          onChangeText={setFullName}
+          value={name}
+          onChangeText={setName}
+          autoFocus
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Grade *"
+          placeholder="Email Address *"
           placeholderTextColor="#999"
-          value={grade}
-          onChangeText={setGrade}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Section (Optional)"
+          placeholder="Password *"
           placeholderTextColor="#999"
-          value={section}
-          onChangeText={setSection}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
         />
         
         <TouchableOpacity 
           style={[styles.button, loading && styles.buttonDisabled]} 
-          onPress={saveStudent}
+          onPress={saveTeacher}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Save</Text>
+            <Text style={styles.buttonText}>Save Teacher</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -130,6 +123,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20,
     fontSize: 16,
+    color: '#000',
   },
   button: {
     backgroundColor: '#4CAF50',
@@ -147,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddStudentScreen;
+export default AddTeacherScreen;

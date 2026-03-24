@@ -17,11 +17,9 @@ class StudentService {
     }
   }
 
-  static async addStudent(name) {
+  static async addStudent(studentData) {
     try {
-      const response = await ApiClient.post('/students', {
-        name,
-      });
+      const response = await ApiClient.post('/students/', studentData);
 
       if (response.status === 201 || response.status === 200) {
         return { success: true, data: response.data };

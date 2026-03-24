@@ -8,37 +8,37 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import StudentService from '../services/StudentService';
+import TeacherService from '../services/TeacherService';
 
-const AdminStudentsScreen = ({ navigation }) => {
-  const [students, setStudents] = useState([]);
+const ManageTeachersScreen = ({ navigation }) => {
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    loadStudents();
+    loadTeachers();
   }, []);
 
-  const loadStudents = async () => {
+  const loadTeachers = async () => {
     try {
-      const data = await StudentService.fetchStudents();
-      setStudents(data);
+      const data = await TeacherService.fetchTeachers();
+      setTeachers(data);
     } catch (error) {
-      Alert.alert('Error', 'Failed to load students');
+      Alert.alert('Error', 'Failed to load teachers');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
-  const handleAddStudent = () => {
-    navigation.navigate('AddStudent');
+  const handleAddTeacher = () => {
+    navigation.navigate('AddTeacher');
   };
 
-  const handleDeleteStudent = async (studentId) => {
+  const handleDeleteTeacher = async (teacherId) => {
     Alert.alert(
-      'Delete Student',
-      'Are you sure you want to delete this student?',
+      'Delete Teacher',
+      'Are you sure you want to delete this teacher?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -46,14 +46,14 @@ const AdminStudentsScreen = ({ navigation }) => {
           style: 'destructive',
           onPress: async () => {
             try {
-              const result = await StudentService.deleteStudent(studentId);
+              const result = await TeacherService.deleteTeacher(teacherId);
               if (result.success) {
-                loadStudents();
+                loadTeachers();
               } else {
                 Alert.alert('Error', result.error);
               }
             } catch (error) {
-              Alert.alert('Error', 'Failed to delete student');
+              Alert.alert('Error', 'Failed to delete teacher');
             }
           },
         },
@@ -63,20 +63,18 @@ const AdminStudentsScreen = ({ navigation }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    loadStudents();
+    loadTeachers();
   };
 
-  const renderStudentItem = ({ item }) => (
-    <View style={styles.studentCard}>
-      <View style={styles.studentInfo}>
-        <Text style={styles.studentName}>{item.name}</Text>
-        <Text style={styles.rfidInfo}>
-          RFID: {item.uid ? item.uid : 'Not assigned'}
-        </Text>
+  const renderTeacherItem = ({ item }) => (
+    <View style={styles.card}>
+      <View style={styles.info}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.email}>{item.email}</Text>
       </View>
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={() => handleDeleteStudent(item.id)}
+        onPress={() => handleDeleteTeacher(item.id)}
       >
         <Text style={styles.deleteButtonText}>Delete</Text>
       </TouchableOpacity>
@@ -87,26 +85,26 @@ const AdminStudentsScreen = ({ navigation }) => {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#2196F3" />
-        <Text style={styles.loadingText}>Loading students...</Text>
+        <Text style={styles.loadingText}>Loading teachers...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Manage Students</Text>
+      <Text style={styles.title}>Manage Teachers</Text>
       
-      {students.length === 0 ? (
+      {teachers.length === 0 ? (
         <View style={styles.center}>
-          <Text style={styles.emptyText}>No Students Found</Text>
-          <TouchableOpacity style={styles.addButton} onPress={handleAddStudent}>
-            <Text style={styles.addButtonText}>Register First Student</Text>
+          <Text style={styles.emptyText}>No Teachers Found</Text>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddTeacher}>
+            <Text style={styles.addButtonText}>Register First Teacher</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <FlatList
-          data={students}
-          renderItem={renderStudentItem}
+          data={teachers}
+          renderItem={renderTeacherItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           refreshing={refreshing}
@@ -114,7 +112,7 @@ const AdminStudentsScreen = ({ navigation }) => {
         />
       )}
       
-      <TouchableOpacity style={styles.fab} onPress={handleAddStudent}>
+      <TouchableOpacity style={styles.fab} onPress={handleAddTeacher}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
     </View>
@@ -136,7 +134,7 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: 16,
   },
-  studentCard: {
+  card: {
     backgroundColor: '#fff',
     padding: 16,
     marginBottom: 12,
@@ -149,16 +147,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  studentInfo: {
+  info: {
     flex: 1,
   },
-  studentName: {
+  name: {
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
     marginBottom: 4,
   },
-  rfidInfo: {
+  email: {
     fontSize: 14,
     color: '#666',
   },
@@ -221,4 +219,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdminStudentsScreen;
+export default ManageTeachersScreen;
