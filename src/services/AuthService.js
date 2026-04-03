@@ -22,7 +22,7 @@ class AuthService {
     } catch (error) {
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+        error: error.response?.data?.detail || 'Login failed' 
       };
     }
   }
